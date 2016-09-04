@@ -89,8 +89,10 @@ describe('compression', function() {
 
   context("decoding", function() {
     context("challenge 1", function() {
-      it.skip('can decode a compressed message', function() {
+      it('can decode a compressed message', function() {
         var decodedMessage = encoder.decode(encoder.compressedBitstring);
+         
+
         assert.equal(decodedMessage, message);
       });
     });

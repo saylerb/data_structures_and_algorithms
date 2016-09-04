@@ -4,7 +4,9 @@
 function Leaf(character, count) {
   this.character = character;
   this.count = count;
+
 }
+
 
 Leaf.prototype.encoderObject = function(parentBits) {
   return {[this.character]: parentBits}
@@ -51,6 +53,9 @@ function Encoder(message) {
   }, "");
 
   function buildTree(encoder, message) {
+
+    
+
     var characterCounts = _.countBy(message.split(''));
 
     var nodeQueue = _.map(characterCounts, function(count, character) {
@@ -77,9 +82,34 @@ Encoder.prototype.characterToCode = function(character) {
 
 Encoder.prototype.decode = function(compressedBitstring) {
 
-  // TODO: All the awesome
+  let rootNode = this.root
 
+  return recursiveDecode(0, rootNode)
+  
+  function recursiveDecode(currentBitIndex, currentPos) {
+  
+     var result = ""
+  
+     if (currentPos instanceof Leaf) {
+       result += currentPos.character  
+
+       return result += recursiveDecode(currentBitIndex, rootNode)
+
+     } else if (currentBitIndex === (compressedBitstring.length)) {
+
+       return result
+
+     } else if (parseInt(compressedBitstring[currentBitIndex]) === 1) {
+
+       return result += recursiveDecode(currentBitIndex + 1, currentPos.right)
+
+     } else {
+
+       return result += recursiveDecode(currentBitIndex + 1, currentPos.left)
+     }
+  }
 }
+  
 
 ///////////////////////////////////
 //// ><((((‘> DECODER <`))))>< ////
