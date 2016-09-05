@@ -4,7 +4,6 @@
 function Leaf(character, count) {
   this.character = character;
   this.count = count;
-
 }
 
 
@@ -53,9 +52,6 @@ function Encoder(message) {
   }, "");
 
   function buildTree(encoder, message) {
-
-    
-
     var characterCounts = _.countBy(message.split(''));
 
     var nodeQueue = _.map(characterCounts, function(count, character) {
@@ -82,34 +78,30 @@ Encoder.prototype.characterToCode = function(character) {
 
 Encoder.prototype.decode = function(compressedBitstring) {
 
-  let rootNode = this.root
-
-  return recursiveDecode(0, rootNode)
-  
-  function recursiveDecode(currentBitIndex, currentPos) {
-  
-     var result = ""
-  
-     if (currentPos instanceof Leaf) {
-       result += currentPos.character  
-
-       return result += recursiveDecode(currentBitIndex, rootNode)
-
-     } else if (currentBitIndex === (compressedBitstring.length)) {
-
-       return result
-
-     } else if (parseInt(compressedBitstring[currentBitIndex]) === 1) {
-
-       return result += recursiveDecode(currentBitIndex + 1, currentPos.right)
-
-     } else {
-
-       return result += recursiveDecode(currentBitIndex + 1, currentPos.left)
-     }
-  }
+  return recursiveDecode.call(this, compressedBitstring, 0, this.root)
 }
   
+const recursiveDecode = function(bitstring, currentIndex, currentPos) {
+ let result = ""
+
+ if (currentPos instanceof Leaf) {
+   result += currentPos.character  
+
+   return result += recursiveDecode.call(this, bitstring, currentIndex, this.root)
+
+ } else if (currentIndex === (bitstring.length)) {
+
+   return result
+
+ } else if (parseInt(bitstring[currentIndex]) === 1) {
+
+   return result += recursiveDecode.call(this, bitstring, currentIndex + 1, currentPos.right)
+
+ } else {
+
+   return result += recursiveDecode.call(this, bitstring, currentIndex + 1, currentPos.left)
+ }
+}
 
 ///////////////////////////////////
 //// ><((((‘> DECODER <`))))>< ////
@@ -120,6 +112,5 @@ function Decoder(compressedBitstring, rootNode) {
 }
 
 Decoder.prototype.message = function(){
- // TODO: It
- // YOU CAN DO IT!!
+  return recursiveDecode.call(this, this.bitstring, 0, this.root)
 }

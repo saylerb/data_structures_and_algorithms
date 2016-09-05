@@ -91,24 +91,22 @@ describe('compression', function() {
     context("challenge 1", function() {
       it('can decode a compressed message', function() {
         var decodedMessage = encoder.decode(encoder.compressedBitstring);
-         
-
-        assert.equal(decodedMessage, message);
+       assert.equal(decodedMessage, message);
       });
     });
 
     context("challenge 2", function() {
-      it.skip('can decode from only a compressed bitstring and a tree', function() {
+      it('can decode from only a compressed bitstring and a tree', function() {
         var decoder = new Decoder(encoder.compressedBitstring, encoder.root);
         assert.equal(decoder.message(), message);
       });
     });
 
     context("batman challenge", function() {
-      it.skip('can decode from only a compressed bitstring and a tree where the nodes have lost their parents', function() {
+      it('can decode from only a compressed bitstring and a tree where the nodes have lost their parents', function() {
         encoder.root.unsetParents();
         var decoder = new Decoder(encoder.compressedBitstring, encoder.root);
-        assert.equal(decoder.message(), decoder.message());
+        assert.equal(decoder.message(), message);
       });
     });
 
